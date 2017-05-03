@@ -38,12 +38,14 @@ public class Fraction : MonoBehaviour {
 	{
 		SetValues();
 
+		// if (IsZero1() == false)
+		// {
+		// 	//first number isn't zero
+		// }
 
-		//Check if zero
-		if (numerator1 == 0)
-		{
-			throw new System.ArgumentException("Parameter cannot be Zero!", "numerator1");
-		}
+		float firstNumber = CalculateFraction1();
+		float secondNumber = CalculateFraction2();
+
 
 	}
 
@@ -62,9 +64,27 @@ public class Fraction : MonoBehaviour {
 
 	}
 
+	// // Checks if the first num/den combination equals 0
+	// public bool IsZero1()
+	// {
+	// 	if (numerator1 == 0)
+	// 	{
+	// 		throw new System.ArgumentException("Parameter cannot be Zero!", "numerator1");
+	// 	}
+	// 	else if (denominator1 == 0)
+	// 	{
+	// 		throw new System.ArgumentException("Parameter cannot be Zero!", "numerator1");
+	// 	}
+	// 	else
+	// 	{
+	// 		return false;
+	// 	}
+	// }
+
 	// Calculate the first number
 	public float CalculateFraction1()
 	{
+		// Dividing by zero with integers will always equal 0
 		return numerator1/denominator1;
 	}
 
