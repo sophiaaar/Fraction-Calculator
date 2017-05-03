@@ -5,14 +5,21 @@ using UnityEngine.UI;
 
 public class Fraction : MonoBehaviour {
 
-	public int numerator1;
+	public int numerator1 = 0;
 	public InputField Numerator1;
-	public int denominator1;
+	public int denominator1 = 0;
 	public InputField Denominator1;
-	public int numerator2;
+	public int numerator2 = 0;
 	public InputField Numerator2;
-	public int denominator2;
+	public int denominator2 = 0;
 	public InputField Denominator2;
+
+	public int selGridInt = 0;
+    public string[] selStrings = new string[] {"+", "-", "x", "÷"};
+    void OnGUI()
+	{
+        selGridInt = GUI.SelectionGrid(new Rect(350, 200, 300, 800), selGridInt, selStrings, 1);
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -23,6 +30,8 @@ public class Fraction : MonoBehaviour {
 	void Update () {
 		
 	}
+
+
 
 	// Called when the Equals button is clicked
 	public void OnEqualsClick()
