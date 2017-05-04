@@ -6,13 +6,13 @@ using UnityEngine.EventSystems;
 
 public class Fraction : MonoBehaviour {
 
-	public int numerator1 = 0;
+	public float numerator1 = 0;
 	public InputField Numerator1;
-	public int denominator1 = 0;
+	public float denominator1 = 0;
 	public InputField Denominator1;
-	public int numerator2 = 0;
+	public float numerator2 = 0;
 	public InputField Numerator2;
-	public int denominator2 = 0;
+	public float denominator2 = 0;
 	public InputField Denominator2;
 
 	public Text currentOperatorText;
@@ -139,6 +139,12 @@ public class Fraction : MonoBehaviour {
 		Debug.Log(currentOperator);
 		// Puts the value in the hidden text box
 		currentOperatorText.text = currentOperator.ToString();
+	}
+
+	public void ConvertAnswerToFraction(float answerDec)
+	{
+		float answer100 = answerDec * 100;
+
 	}
 
 	// Clears all values
