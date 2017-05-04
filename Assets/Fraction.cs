@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Fraction : MonoBehaviour {
 
@@ -14,12 +15,11 @@ public class Fraction : MonoBehaviour {
 	public int denominator2 = 0;
 	public InputField Denominator2;
 
-	public int selGridInt = 0;
-    public string[] selStrings = new string[] {"+", "-", "x", "÷"};
-    void OnGUI()
-	{
-        selGridInt = GUI.SelectionGrid(new Rect(350, 200, 300, 800), selGridInt, selStrings, 1);
-    }
+	public Text currentOperatorText;
+
+	public float answer;
+	public InputField AnswerBox;
+	public Text TextBox;
 
 	// Use this for initialization
 	void Start () {
@@ -37,14 +37,47 @@ public class Fraction : MonoBehaviour {
 	public void OnEqualsClick()
 	{
 		SetValues();
-
-		// if (IsZero1() == false)
-		// {
-		// 	//first number isn't zero
-		// }
+		//Set denominators to zero if empty - TODO
 
 		float firstNumber = CalculateFraction1();
 		float secondNumber = CalculateFraction2();
+
+		if (IsZero(firstNumber, secondNumber) == false)
+		{
+			//Do the calculation
+
+			if (currentOperatorText.text.ToString().Contains("+"))
+			{
+				answer = firstNumber + secondNumber;
+				//AnswerBox.text = answer.ToString();
+			}
+			else if (currentOperatorText.text.ToString() == "-")
+			{
+				answer = firstNumber - secondNumber;
+			}
+			else if (currentOperatorText.text.ToString() == "*")
+			{
+				answer = firstNumber * secondNumber;
+			}
+			else if (currentOperatorText.text.ToString() == "/")
+			{
+				answer = firstNumber / secondNumber;
+			}
+			else
+			{
+				//Please enter some values
+				TextBox.text = "Please enter some values. Press C to restart";
+			}
+			Debug.Log("answer is " + answer);
+			AnswerBox.text = answer.ToString();
+
+		}
+		else
+		{
+			// fraction cannot be equal to zero
+			// i know that this is not the ideal logic (adding, multiplying, and subtracting by zero is fine)
+			// perhaps create an 'if division' - TODO
+		}
 
 
 	}
@@ -64,23 +97,6 @@ public class Fraction : MonoBehaviour {
 
 	}
 
-	// // Checks if the first num/den combination equals 0
-	// public bool IsZero1()
-	// {
-	// 	if (numerator1 == 0)
-	// 	{
-	// 		throw new System.ArgumentException("Parameter cannot be Zero!", "numerator1");
-	// 	}
-	// 	else if (denominator1 == 0)
-	// 	{
-	// 		throw new System.ArgumentException("Parameter cannot be Zero!", "numerator1");
-	// 	}
-	// 	else
-	// 	{
-	// 		return false;
-	// 	}
-	// }
-
 	// Calculate the first number
 	public float CalculateFraction1()
 	{
@@ -92,5 +108,55 @@ public class Fraction : MonoBehaviour {
 	public float CalculateFraction2()
 	{
 		return numerator2/denominator2;
+	}
+
+	public bool IsZero(float one, float two)
+	{
+		if (one == 0)
+		{
+			//check if division is being done first?
+			TextBox.text = "Fraction1 cannot be zero. Press C to restart";
+			return true;
+		}
+		else if (two == 0)
+		{
+			TextBox.text = "Fraction2 cannot be zero. Press C to restart";
+			return true;
+		}
+		else
+		{
+			//this is fine
+			return false;
+		}
+
+	}
+
+	// Places the chosen operator in a hidden text box so that it an be used for the operation (v sneaky and a bit hacky)
+	public void DecideOperator()
+	{
+		// Gets the value of the clicked button (+, -, *, /)
+		string currentOperator = EventSystem.current.currentSelectedGameObject.GetComponent<Button>().GetComponentInChildren<Text>().text;
+		Debug.Log(currentOperator);
+		// Puts the value in the hidden text box
+		currentOperatorText.text = currentOperator.ToString();
+	}
+
+	// Clears all values
+	public void Reset()
+	{
+		Numerator1.text = null;
+		numerator1 = 0;
+		Denominator1.text = null;
+		denominator1 = 0;
+		Numerator2.text = null;
+		numerator2 = 0;
+		Denominator2.text = null;
+		denominator2 = 0;
+		currentOperatorText = null;
+		AnswerBox.text = null;
+		answer = 0;
+		currentOperatorText.text = null;
+		TextBox.text = null;
+		TextBox.text = "Sophia's Fraction Calculator:";
 	}
 }
