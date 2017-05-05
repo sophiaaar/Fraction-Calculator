@@ -51,6 +51,7 @@ public class Fraction : MonoBehaviour
 			return a;
 	}
 
+	// Reduces the fraction to its lowest terms
 	public Fraction Reduce(int numerator, int denominator)
 	{
 		// if numerator and denominator are both negative, convert both to a positive

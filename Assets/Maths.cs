@@ -27,31 +27,46 @@ public class Maths : MonoBehaviour {
 	public void OnEqualsClick()
 	{
 		SetValues();
-		//Set denominators to zero if empty - TODO
+
+		//if (currentOperatorText.text != "+" || currentOperatorText.text != "-" ||currentOperatorText.text != "*" || currentOperatorText.text != "/")
+		if (currentOperatorText.text == "")
+		{
+			TextBox.text = "Select an operator.";
+			fraction1 = null;
+			fraction2 = null;
+			//Reset();
+		}
 
 		//Do the calculation
-
-		if (currentOperatorText.text.ToString().Contains("+"))
+		if (IsFractionZero(fraction1, fraction2) == false)
 		{
-			answer = _Fraction.Add(fraction1, fraction2);
-		}
-		else if (currentOperatorText.text.ToString() == "-")
-		{
-			answer = _Fraction.Subtract(fraction1, fraction2);
-		}
-		else if (currentOperatorText.text.ToString() == "*")
-		{
-			answer = _Fraction.Multiply(fraction1, fraction2);
-		}
-		else if (currentOperatorText.text.ToString() == "/")
-		{
-			answer = _Fraction.Divide(fraction1, fraction2);
+			if (currentOperatorText.text.ToString().Contains("+"))
+			{
+				answer = _Fraction.Add(fraction1, fraction2);
+			}
+			else if (currentOperatorText.text.ToString() == "-")
+			{
+				answer = _Fraction.Subtract(fraction1, fraction2);
+			}
+			else if (currentOperatorText.text.ToString() == "*")
+			{
+				answer = _Fraction.Multiply(fraction1, fraction2);
+			}
+			else if (currentOperatorText.text.ToString() == "/")
+			{
+				answer = _Fraction.Divide(fraction1, fraction2);
+			}
+			else
+			{
+				//Please enter some values
+				TextBox.text = "Please enter some values. Press C to restart";
+			}
 		}
 		else
 		{
-			//Please enter some values
-			TextBox.text = "Please enter some values. Press C to restart";
+			TextBox.text = "Values cannot be zero. Press C to restart";
 		}
+
 
 		answer = _Fraction.Reduce(answer.Numerator, answer.Denominator);
 		AnswerNum.text = answer.Numerator.ToString();
@@ -70,40 +85,6 @@ public class Maths : MonoBehaviour {
 		fraction2 = new Fraction(numerator2, denominator2);
 	}
 
-	// Calculate the first number
-	public float CalculateFraction1()
-	{
-		// Dividing by zero with integers will always equal 0
-		return numerator1/denominator1;
-	}
-
-	// Calculate the second number
-	public float CalculateFraction2()
-	{
-		return numerator2/denominator2;
-	}
-
-	public bool IsZero(float one, float two)
-	{
-		if (one == 0)
-		{
-			//check if division is being done first?
-			TextBox.text = "Fraction1 cannot be zero. Press C to restart";
-			return true;
-		}
-		else if (two == 0)
-		{
-			TextBox.text = "Fraction2 cannot be zero. Press C to restart";
-			return true;
-		}
-		else
-		{
-			//this is fine
-			return false;
-		}
-
-	}
-
 	// Places the chosen operator in a hidden text box so that it an be used for the operation (v sneaky and a bit hacky)
 	public void DecideOperator()
 	{
@@ -111,14 +92,34 @@ public class Maths : MonoBehaviour {
 		string currentOperator = EventSystem.current.currentSelectedGameObject.GetComponent<Button>().GetComponentInChildren<Text>().text;
 		Debug.Log(currentOperator);
 		// Puts the value in the hidden text box
-		currentOperatorText.text = currentOperator.ToString();
+		currentOperatorText.text = currentOperator;
 	}
 
-	public void ConvertAnswerToFraction(float answerDec)
+	// Checks if either of the fractions are zero
+	private bool IsFractionZero(Fraction fraction1, Fraction fraction2)
 	{
-		float answer100 = answerDec * 100;
-
+		if (fraction1.Numerator == 0)
+		{
+			return true;
+		}
+		else if (fraction1.Denominator == 0)
+		{
+			return true;
+		}
+		if (fraction2.Numerator == 0)
+		{
+			return true;
+		}
+		else if (fraction2.Denominator == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
+
 
 	// Clears all values
 	public void Reset()
@@ -131,12 +132,12 @@ public class Maths : MonoBehaviour {
 		numerator2 = 0;
 		Denominator2.text = null;
 		denominator2 = 0;
-		currentOperatorText = null;
+		//currentOperatorText = null;
 		AnswerNum.text = null;
 		AnswerDen.text = null;
 		//answer = 0;
 		currentOperatorText.text = "";
-		TextBox.text = null;
+		//TextBox = null;
 		TextBox.text = "Sophia's Fraction Calculator:";
 	}
 }
