@@ -1,168 +1,129 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
-public class Fraction : MonoBehaviour {
+public class Fraction : MonoBehaviour
+{
+	private int _Numerator;
+	private int _Denominator;
+	public Fraction(int theNumerator, int theDenominator)
+	{
 
-	public float numerator1 = 0;
-	public InputField Numerator1;
-	public float denominator1 = 0;
-	public InputField Denominator1;
-	public float numerator2 = 0;
-	public InputField Numerator2;
-	public float denominator2 = 0;
-	public InputField Denominator2;
+		_Numerator = theNumerator;
+		_Denominator = theDenominator;
 
-	public Text currentOperatorText;
-
-	public float answer;
-	public InputField AnswerBox;
-	public Text TextBox;
-
-	// Use this for initialization
-	void Start () {
-		
+		if (_Numerator == 0)
+		{
+			throw new System.ArgumentException("Parameter cannot be Zero!", "numerator");
+		}
+		else if (_Denominator == 0)
+		{
+			throw new System.ArgumentException("Parameter cannot be Zero!", "denominator");
+		}
+		else
+		{
+			Reduce(_Numerator, _Denominator);
+		}
 	}
+
+	public int Numerator//read only property for numerator
+	{
+		get
+		{
+			return _Numerator;
+		}
+	}
+	public int Denominator//read only property for denominator
+	{
+		get
+		{
+			return _Denominator;
+		}
+	}
+		
 	
-	// Update is called once per frame
-	void Update () {
+	// allows the user to create an "empty" fraction by initializing a fraction of 1/1
+	public Fraction() : this(1, 1) { }
+
+	// method that takes in two numbers and finds the 
+	// Greatest Common Factor (GCF)
+	private int GCF(int left, int right)
+	{
+		int GCF;
+		int remainder;
+		int a = left;
+		int b = right;
+		
+		while (b != 0)
+		{
+			remainder = left % right;
+			a = b;
+			b = remainder;
+		}//end while
+		GCF = a;
+		return GCF;
+	}
+
+	private void Reduce(int numerator, int denominator)
+	{
+		if (numerator < 0 && denominator < 0)//if numerator and denominator are both negative, 
+		{                                    // convert both to a positive
+			numerator *= -1;
+			denominator *= -1;
+
+		}
+		else if (numerator > 0 && denominator < 0)//if numerator is positive, but the denominator is negative
+			//convert the numerator to a negative and the denominator to a positive
+		{
+			numerator *= -1;
+			denominator *= -1;
+		}
+		
+
+		int a = GCF(numerator, denominator);
+		
+		numerator = numerator / a;//reduce the numerator
+		denominator = denominator / a;//reduce the denominator
+
 		
 	}
-
-
-
-	// Called when the Equals button is clicked
-	public void OnEqualsClick()
+	public Fraction Add(Fraction fraction1, Fraction fraction2)
 	{
-		SetValues();
-		//Set denominators to zero if empty - TODO
+		Fraction result = new Fraction((fraction1.Numerator * fraction2.Denominator) + (fraction1.Numerator * fraction2.Denominator),
+								fraction1.Denominator * fraction2.Denominator);
+		
+		return result;
+	}
+	public Fraction Subtract(Fraction fraction1, Fraction fraction2)
+	{
+		return new Fraction(((fraction1.Numerator * fraction2.Denominator) - (fraction2.Numerator * fraction1.Denominator)),
+			(fraction1.Denominator * fraction2.Denominator));
+		
+	}
+	public Fraction Multiply(Fraction fraction1, Fraction fraction2)
+	{
+		int newNum = fraction1.Numerator * fraction2.Denominator;
+		int newDen = fraction1.Denominator * fraction2.Denominator;
+		return new Fraction(newNum, newDen);
 
-		float firstNumber = CalculateFraction1();
-		float secondNumber = CalculateFraction2();
+	}
+	public Fraction Divide(Fraction fraction1, Fraction fraction2)
+	{
+		return new Fraction((fraction1.Numerator * fraction2.Denominator), (fraction2.Numerator * fraction1.Denominator));
 
-		if (IsZero(firstNumber, secondNumber) == false)
+	}
+	public override string ToString()
+	{
+		return Numerator + "/" + Denominator;
+	}
+	public string ToFloatString(int digits)
+	{
+		if (digits < 1)
 		{
-			//Do the calculation
-
-			if (currentOperatorText.text.ToString().Contains("+"))
-			{
-				answer = firstNumber + secondNumber;
-				//AnswerBox.text = answer.ToString();
-			}
-			else if (currentOperatorText.text.ToString() == "-")
-			{
-				answer = firstNumber - secondNumber;
-			}
-			else if (currentOperatorText.text.ToString() == "*")
-			{
-				answer = firstNumber * secondNumber;
-			}
-			else if (currentOperatorText.text.ToString() == "/")
-			{
-				answer = firstNumber / secondNumber;
-			}
-			else
-			{
-				//Please enter some values
-				TextBox.text = "Please enter some values. Press C to restart";
-			}
-			Debug.Log("answer is " + answer);
-			AnswerBox.text = answer.ToString();
-
+			//throw new ArgumentOutOfRangeException("Digits must be a non negative integer!");
 		}
-		else
-		{
-			// fraction cannot be equal to zero
-			// i know that this is not the ideal logic (adding, multiplying, and subtracting by zero is fine)
-			// perhaps create an 'if division' - TODO
-		}
-
-
-	}
-
-	// Sets the values of the numerators and denominators
-	public void SetValues()
-	{
-		numerator1 = int.Parse(Numerator1.text);
-		Debug.Log("numerator1 =" + numerator1);
-		denominator1 = int.Parse(Denominator1.text);
-		Debug.Log("denominator1 =" + denominator1);
-
-		numerator2 = int.Parse(Numerator2.text);
-		Debug.Log("numerator2 =" + numerator2);
-		denominator2 = int.Parse(Denominator2.text);
-		Debug.Log("denominator2 =" + denominator2);
-
-	}
-
-	// Calculate the first number
-	public float CalculateFraction1()
-	{
-		// Dividing by zero with integers will always equal 0
-		return numerator1/denominator1;
-	}
-
-	// Calculate the second number
-	public float CalculateFraction2()
-	{
-		return numerator2/denominator2;
-	}
-
-	public bool IsZero(float one, float two)
-	{
-		if (one == 0)
-		{
-			//check if division is being done first?
-			TextBox.text = "Fraction1 cannot be zero. Press C to restart";
-			return true;
-		}
-		else if (two == 0)
-		{
-			TextBox.text = "Fraction2 cannot be zero. Press C to restart";
-			return true;
-		}
-		else
-		{
-			//this is fine
-			return false;
-		}
-
-	}
-
-	// Places the chosen operator in a hidden text box so that it an be used for the operation (v sneaky and a bit hacky)
-	public void DecideOperator()
-	{
-		// Gets the value of the clicked button (+, -, *, /)
-		string currentOperator = EventSystem.current.currentSelectedGameObject.GetComponent<Button>().GetComponentInChildren<Text>().text;
-		Debug.Log(currentOperator);
-		// Puts the value in the hidden text box
-		currentOperatorText.text = currentOperator.ToString();
-	}
-
-	public void ConvertAnswerToFraction(float answerDec)
-	{
-		float answer100 = answerDec * 100;
-
-	}
-
-	// Clears all values
-	public void Reset()
-	{
-		Numerator1.text = null;
-		numerator1 = 0;
-		Denominator1.text = null;
-		denominator1 = 0;
-		Numerator2.text = null;
-		numerator2 = 0;
-		Denominator2.text = null;
-		denominator2 = 0;
-		currentOperatorText = null;
-		AnswerBox.text = null;
-		answer = 0;
-		currentOperatorText.text = null;
-		TextBox.text = null;
-		TextBox.text = "Sophia's Fraction Calculator:";
+		
+		double fractionAsNum = Numerator / Denominator;
+		return fractionAsNum.ToString("f" + digits);
 	}
 }
