@@ -15,13 +15,13 @@ public class Maths : MonoBehaviour {
 	public int denominator2 = 0;
 	public InputField Denominator2;
 	public Text currentOperatorText;
-	public Fraction answer;
+	Fraction answer;
 	public InputField AnswerNum;
 	public InputField AnswerDen;
 	public Text TextBox;
 	Fraction fraction1;
 	Fraction fraction2;
-	Fraction _Fraction;
+	public Fraction _Fraction;
 
 	// Called when the Equals button is clicked
 	public void OnEqualsClick()
@@ -32,8 +32,8 @@ public class Maths : MonoBehaviour {
 		float firstNumber = CalculateFraction1();
 		float secondNumber = CalculateFraction2();
 
-		if (IsZero(firstNumber, secondNumber) == false)
-		{
+		// if (IsZero(firstNumber, secondNumber) == false)
+		// {
 			//Do the calculation
 
 			if (currentOperatorText.text.ToString().Contains("+"))
@@ -66,13 +66,13 @@ public class Maths : MonoBehaviour {
 			AnswerNum.text = answer.Numerator.ToString();
 			AnswerDen.text = answer.Denominator.ToString();
 
-		}
-		else
-		{
-			// fraction cannot be equal to zero
-			// i know that this is not the ideal logic (adding, multiplying, and subtracting by zero is fine)
-			// perhaps create an 'if division' - TODO
-		}
+		// }
+		// else
+		// {
+		// 	// fraction cannot be equal to zero
+		// 	// i know that this is not the ideal logic (adding, multiplying, and subtracting by zero is fine)
+		// 	// perhaps create an 'if division' - TODO
+		// }
 
 
 	}
@@ -85,6 +85,7 @@ public class Maths : MonoBehaviour {
 		denominator1 = int.Parse(Denominator1.text);
 		Debug.Log("denominator1 =" + denominator1);
 		fraction1 = new Fraction(numerator1, denominator1);
+		Debug.Log(fraction1.Numerator + " " + fraction1.Denominator);
 
 
 		numerator2 = int.Parse(Numerator2.text);
@@ -92,7 +93,7 @@ public class Maths : MonoBehaviour {
 		denominator2 = int.Parse(Denominator2.text);
 		Debug.Log("denominator2 =" + denominator2);
 		fraction2 = new Fraction(numerator2, denominator2);
-
+		Debug.Log(fraction2.Numerator + " " + fraction2.Denominator);
 	}
 
 	// Calculate the first number
@@ -160,7 +161,7 @@ public class Maths : MonoBehaviour {
 		AnswerNum.text = null;
 		AnswerDen.text = null;
 		//answer = 0;
-		currentOperatorText.text = null;
+		currentOperatorText.text = "";
 		TextBox.text = null;
 		TextBox.text = "Sophia's Fraction Calculator:";
 	}
