@@ -19,8 +19,8 @@ public class Maths : MonoBehaviour {
 	public InputField AnswerNum;
 	public InputField AnswerDen;
 	public Text TextBox;
-	Fraction fraction1;
-	Fraction fraction2;
+	public Fraction fraction1;
+	public Fraction fraction2;
 	public Fraction _Fraction;
 
 	// Called when the Equals button is clicked
@@ -28,49 +28,46 @@ public class Maths : MonoBehaviour {
 	{
 		SetValues();
 
-		//if (currentOperatorText.text != "+" || currentOperatorText.text != "-" ||currentOperatorText.text != "*" || currentOperatorText.text != "/")
-		if (currentOperatorText.text == "")
-		{
-			TextBox.text = "Select an operator.";
-			fraction1 = null;
-			fraction2 = null;
-			//Reset();
-		}
-
 		//Do the calculation
 		if (IsFractionZero(fraction1, fraction2) == false)
 		{
-			if (currentOperatorText.text.ToString().Contains("+"))
+			if (currentOperatorText.text.ToString() == ("+"))
 			{
 				answer = _Fraction.Add(fraction1, fraction2);
+				answer = _Fraction.Reduce(answer.Numerator, answer.Denominator);
+				AnswerNum.text = answer.Numerator.ToString();
+				AnswerDen.text = answer.Denominator.ToString();
 			}
 			else if (currentOperatorText.text.ToString() == "-")
 			{
 				answer = _Fraction.Subtract(fraction1, fraction2);
+				answer = _Fraction.Reduce(answer.Numerator, answer.Denominator);
+				AnswerNum.text = answer.Numerator.ToString();
+				AnswerDen.text = answer.Denominator.ToString();
 			}
 			else if (currentOperatorText.text.ToString() == "*")
 			{
 				answer = _Fraction.Multiply(fraction1, fraction2);
+				answer = _Fraction.Reduce(answer.Numerator, answer.Denominator);
+				AnswerNum.text = answer.Numerator.ToString();
+				AnswerDen.text = answer.Denominator.ToString();
 			}
 			else if (currentOperatorText.text.ToString() == "/")
 			{
 				answer = _Fraction.Divide(fraction1, fraction2);
+				answer = _Fraction.Reduce(answer.Numerator, answer.Denominator);
+				AnswerNum.text = answer.Numerator.ToString();
+				AnswerDen.text = answer.Denominator.ToString();
 			}
 			else
 			{
-				//Please enter some values
-				TextBox.text = "Please enter some values. Press C to restart";
+				TextBox.text = "Please select an operator or press C to restart.";
 			}
 		}
 		else
 		{
 			TextBox.text = "Values cannot be zero. Press C to restart";
 		}
-
-
-		answer = _Fraction.Reduce(answer.Numerator, answer.Denominator);
-		AnswerNum.text = answer.Numerator.ToString();
-		AnswerDen.text = answer.Denominator.ToString();
 	}
 
 	// Sets the values of the numerators and denominators based on what has been inputted by the user
@@ -135,6 +132,8 @@ public class Maths : MonoBehaviour {
 		//currentOperatorText = null;
 		AnswerNum.text = null;
 		AnswerDen.text = null;
+		fraction1 = new Fraction(0,0);
+		fraction2 = new Fraction(0,0);
 		//answer = 0;
 		currentOperatorText.text = "";
 		//TextBox = null;
