@@ -105,6 +105,27 @@ public class PlayModeTest {
 		Assert.AreEqual(expectedAnswer, actualAnswer);
 	}	
 
+	[Test]
+	public void TestReducing()
+	{
+		//A test to check that the reduction method works
+		//It takes in two ints (a fraction) and reduces them to their lowest terms
+
+		int inputNumerator = 3;
+		int inputDenominator = 6;
+
+		//Reducing 3/6 should be 1/2
+
+		Fraction actualResult = new Fraction();
+		Fraction reduction = actualResult.Reduce(inputNumerator, inputDenominator);
+
+		int expectedNumerator = 1;
+		int expectedDenominator = 2;
+
+		Assert.AreEqual(expectedNumerator, reduction.Numerator);
+		Assert.AreEqual(expectedDenominator, reduction.Denominator);
+	}
+
 	// A UnityTest behaves like a coroutine in PlayMode
 	// and allows you to yield null to skip a frame in EditMode
 	[UnityTest]
